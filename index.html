@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NEXUS | AI Study Companion</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="room-default">
+
+    <div class="bg-gradient"></div>
+    <canvas id="particles"></canvas>
+
+    <div class="app-container">
+        
+        <nav class="sidebar glass">
+            <div class="logo">
+                <div class="logo-icon"><i class="fa-solid fa-atom fa-spin"></i></div> 
+                <span>NEXUS</span>
+            </div>
+            
+            <ul class="nav-links">
+                <li class="active" data-tab="dashboard"><i class="fa-solid fa-grid-2"></i> Dashboard</li>
+                <li data-tab="syllabus"><i class="fa-solid fa-book-open"></i> Syllabus</li>
+                <li data-tab="focus"><i class="fa-solid fa-stopwatch"></i> Focus Core</li>
+                <li data-tab="missions"><i class="fa-solid fa-trophy"></i> Missions</li>
+                <li data-tab="shop"><i class="fa-solid fa-store"></i> Reward Shop</li>
+                <li data-tab="timeline"><i class="fa-solid fa-clock-rotate-left"></i> History</li>
+                <li data-tab="analytics"><i class="fa-solid fa-chart-pie"></i> Analytics</li>
+                <li data-tab="settings" style="margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1)"><i class="fa-solid fa-gear"></i> Settings</li>
+            </ul>
+            
+            <div class="user-profile glass-panel">
+                <div class="user-info">
+                    <h4 id="user-title">Scholar</h4>
+                    <div class="xp-bar-container">
+                        <div class="xp-bar" id="xp-progress"></div>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-top:5px; font-size:0.8rem;">
+                        <span id="xp-text">0 XP</span>
+                        <span class="text-gold"><i class="fa-solid fa-coins"></i> <span id="user-coins-display">0</span></span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <header>
+                <div class="greeting">
+                    <h1 id="greeting-text">Welcome!</h1>
+                    <p class="subtitle" id="daily-intent-display">Ready to learn?</p>
+                </div>
+                <div class="header-actions">
+                    <button class="glass-btn small-btn" onclick="triggerBreathing()"><i class="fa-solid fa-lungs"></i> Breathe</button>
+                    <div class="stat-badge fire">
+                        <i class="fa-solid fa-fire"></i> <span id="streak-count">0</span> Streak
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-area">
+                
+                <div id="dashboard" class="view active-view">
+                    <div class="dashboard-grid">
+                        <div class="stats-overview glass">
+                            <div class="stat-item">
+                                <h3>Tasks Left</h3>
+                                <span id="stat-tasks">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <h3>Chapters Done</h3>
+                                <span id="stat-chapters">0</span>
+                            </div>
+                        </div>
+                        <div class="add-task-bar glass">
+                            <input type="text" id="task-input" placeholder="New Task Name...">
+                            <select id="task-subject">
+                                <option value="Physics">Physics</option>
+                                <option value="Chemistry">Chemistry</option>
+                                <option value="Maths">Maths</option>
+                                <option value="Biology">Biology</option>
+                                <option value="CS">Comp. Sci</option>
+                            </select>
+                            <button id="add-task-btn" class="glow-btn"><i class="fa-solid fa-plus"></i></button>
+                        </div>
+                    </div>
+                    <div class="tasks-container" id="tasks-list"></div>
+                </div>
+
+                <div id="syllabus" class="view">
+                    <div class="syllabus-header glass">
+                        <button class="tab-btn active" id="btn-11" onclick="switchClass('11')">1st PUC</button>
+                        <button class="tab-btn" id="btn-12" onclick="switchClass('12')">2nd PUC</button>
+                        <div class="progress-indicator"><strong id="syllabus-percent">0%</strong> Done</div>
+                    </div>
+                    <div class="syllabus-grid" id="syllabus-container"></div>
+                </div>
+
+                <div id="focus" class="view">
+                    <div class="focus-layout">
+                        <div class="timer-visual glass tilt-card">
+                            <canvas id="timer-canvas" width="300" height="300"></canvas>
+                            <div class="timer-overlay">
+                                <div id="timer-display">25:00</div>
+                                <div id="timer-status">SESSION READY</div>
+                            </div>
+                            <div class="glow-effect"></div>
+                        </div>
+
+                        <div class="timer-config">
+                            <div class="glass panel-p">
+                                <h3><i class="fa-solid fa-sliders"></i> Session Controls</h3>
+                                <div class="timer-buttons">
+                                    <button id="start-timer" class="glow-btn large-btn">INITIALIZE FOCUS</button>
+                                    <button id="pause-timer" class="glass-btn">PAUSE</button>
+                                    <button id="reset-timer" class="glass-btn">ABORT</button>
+                                </div>
+                            </div>
+
+                            <div class="glass panel-p">
+                                <h3><i class="fa-solid fa-headphones"></i> Neuro-Ambience</h3>
+                                <select id="ambience-select" onchange="AudioEngine.setAmbience(this.value)">
+                                    <option value="none">Silent Void</option>
+                                    <option value="white">White Noise (Blocker)</option>
+                                    <option value="pink">Pink Noise (Deep Focus)</option>
+                                    <option value="brown">Brown Noise (Relaxation)</option>
+                                </select>
+                            </div>
+
+                            <div class="glass panel-p">
+                                <h3><i class="fa-solid fa-robot"></i> Companion Select</h3>
+                                <div class="avatar-selector">
+                                    <button onclick="setAvatar('drone')" class="av-btn active"><i class="fa-solid fa-robot"></i></button>
+                                    <button onclick="setAvatar('orb')" class="av-btn"><i class="fa-solid fa-circle-nodes"></i></button>
+                                    <button onclick="setAvatar('owl')" class="av-btn"><i class="fa-solid fa-crow"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="missions" class="view">
+                    <div class="glass panel-p mb-20">
+                        <h2><i class="fa-solid fa-scroll"></i> Daily Quests</h2>
+                        <div id="daily-missions-list" class="mission-grid"></div>
+                    </div>
+                </div>
+
+                <div id="shop" class="view">
+                    <div class="shop-header glass panel-p">
+                        <div>
+                            <h2>Reward Shop</h2>
+                            <p class="subtitle">Customize your environment</p>
+                        </div>
+                        <div class="coin-display">
+                            <i class="fa-solid fa-coins text-gold"></i> <span id="user-coins">0</span>
+                        </div>
+                    </div>
+                    
+                    <div class="shop-tabs">
+                        <button class="tab-btn active" onclick="filterShop('room')">Study Rooms</button>
+                        <button class="tab-btn" onclick="filterShop('decoration')">Desk Items</button>
+                    </div>
+
+                    <div id="shop-grid" class="shop-grid"></div>
+                </div>
+
+                <div id="timeline" class="view">
+                    <div class="report-header">
+                        <h2>Today's Activity</h2>
+                        <button class="glow-btn" onclick="generateDailyReport()">Download Report</button>
+                    </div>
+                    <div class="timeline-container custom-scroll" id="activity-log"></div>
+                </div>
+
+                <div id="analytics" class="view">
+                    <div class="analytics-grid">
+                        <div class="chart-card glass">
+                            <h3><i class="fa-solid fa-chart-simple text-neon"></i> Subject Breakdown</h3>
+                            <div style="height: 250px; position: relative;">
+                                <canvas id="masteryChart"></canvas>
+                            </div>
+                            <p class="chart-helper">Longer bar = More chapters completed</p>
+                        </div>
+
+                        <div class="chart-card glass">
+                            <h3><i class="fa-solid fa-bullseye text-gold"></i> Overall Progress</h3>
+                            <div style="height: 250px; position: relative; display: flex; justify-content: center;">
+                                <canvas id="progressChart"></canvas>
+                            </div>
+                            <p class="chart-helper" style="text-align: center;">Green = Done <span style="color:#444">|</span> Grey = To Do</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="settings" class="view">
+                    <div class="glass settings-container">
+                        <div class="settings-tabs">
+                            <button class="set-tab active" onclick="openSetTab('gen')">General</button>
+                            <button class="set-tab" onclick="openSetTab('vis')">Visuals</button>
+                            <button class="set-tab" onclick="openSetTab('aud')">Audio</button>
+                            <button class="set-tab" onclick="openSetTab('psy')">Psychology</button>
+                        </div>
+
+                        <div id="set-gen" class="set-content active">
+                            <div class="setting-row">
+                                <span>Sound Effects</span>
+                                <label class="switch"><input type="checkbox" id="setting-sound"><span class="slider"></span></label>
+                            </div>
+                            <div class="setting-row">
+                                <span>Session Alarm</span>
+                                <label class="switch"><input type="checkbox" id="setting-alarm"><span class="slider"></span></label>
+                            </div>
+                        </div>
+
+                        <div id="set-vis" class="set-content">
+                            <div class="setting-row">
+                                <span>Low Graphics Mode</span>
+                                <label class="switch"><input type="checkbox" id="setting-lowgfx"><span class="slider"></span></label>
+                            </div>
+                        </div>
+
+                        <div id="set-aud" class="set-content">
+                            <div class="setting-row">
+                                <span>Mentor Voice</span>
+                                <label class="switch"><input type="checkbox" checked disabled><span class="slider"></span></label>
+                            </div>
+                        </div>
+
+                        <div id="set-psy" class="set-content">
+                            <div class="setting-row">
+                                <span>Strict Mentor Mode</span>
+                                <label class="switch"><input type="checkbox" id="setting-strict"><span class="slider"></span></label>
+                            </div>
+                        </div>
+                        
+                        <div style="padding: 20px; text-align:center;">
+                            <button onclick="resetApp()" class="glass-btn" style="color: #ff8888; border-color: #ff8888;">Factory Reset Data</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <div class="mentor-container">
+            <div class="speech-bubble glass" id="mentor-bubble">System Online.</div>
+            
+            <div id="avatar-drone" class="avatar-wrapper active">
+                <div class="drone-body"><div class="drone-eye"></div></div>
+            </div>
+
+            <div id="avatar-orb" class="avatar-wrapper">
+                <div class="orb-core">
+                    <div class="orb-ring ring1"></div>
+                    <div class="orb-ring ring2"></div>
+                </div>
+            </div>
+
+            <div id="avatar-owl" class="avatar-wrapper">
+                <div class="owl-head">
+                    <div class="owl-eye left"></div><div class="owl-eye right"></div>
+                    <div class="owl-beak"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="modal-overlay" class="modal-overlay">
+        
+        <div id="modal-daily" class="modal glass">
+            <h2><i class="fa-solid fa-sun text-gold"></i> Morning Protocol</h2>
+            <p>Select your energy level and goal.</p>
+            
+            <div class="mood-selector">
+                <div class="mood-btns">
+                    <button onclick="selectMood('low')" class="mood-btn">😴 Low</button>
+                    <button onclick="selectMood('normal')" class="mood-btn active">🙂 Normal</button>
+                    <button onclick="selectMood('high')" class="mood-btn">🔥 High</button>
+                </div>
+            </div>
+
+            <input type="text" id="daily-goal-input" placeholder="Main Goal: e.g. Finish Electrostatics">
+            
+            <div class="suggestions-box glass-inset">
+                <small style="color:var(--primary)">AI SUGGESTION:</small>
+                <div id="ai-suggestion-text" style="font-size:0.9rem; margin-top:5px;">Analyzing...</div>
+            </div>
+
+            <button onclick="setDailyIntent()" class="glow-btn full-width">Initialize Day</button>
+        </div>
+
+        <div id="modal-breath" class="modal glass" style="text-align:center;">
+            <h2>Decompress</h2>
+            <div class="breathing-circle"></div>
+            <p id="breath-text" style="font-size:1.5rem; margin:20px 0;">Inhale...</p>
+            <button onclick="closeModal()" class="glass-btn">Return to Study</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
