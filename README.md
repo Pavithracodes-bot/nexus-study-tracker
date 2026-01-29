@@ -3,7 +3,7 @@
 
 **NEXUS** is a gamified, distraction-free study dashboard designed to help students stay focused and track their academic progress. It combines productivity tools with game mechanics (XP, Coins, Levels) to make studying engaging.
 
-🚀 **Live Demo:** 🚀 Live Demo: https://pavithracodes-bot.github.io/nexus-study-tracker/
+🚀 **Live Demo:** 🚀 Live Demo: [https://pavithracodes-bot.github.io/nexus-study-tracker/ ]
 
 
 ## ✨ Key Features
